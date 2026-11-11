@@ -36,6 +36,25 @@ const KIND = {
 const FALLBACK = { icon: "bell", cls: "blue", title: "Notifikasi" };
 
 
+const AKUN = {
+  persetujuan: {
+    icon: "shield", cls: "green",
+    admin: { title: "Akun Disetujui", tag: "Disetujui", go: "/admin/profil", btn: "Lihat Profil" },
+    user: { title: "Akun Disetujui", tag: "Disetujui", go: "/user/profil", btn: "Lihat Profil" },
+  },
+  penolakan: {
+    icon: "x", cls: "red",
+    admin: { title: "Pendaftaran Ditolak", tag: "Ditolak" },
+    user: { title: "Pendaftaran Ditolak", tag: "Ditolak" },
+  },
+  verifikasi: {
+    icon: "shield", cls: "blue",
+    admin: { title: "Status Akun Diperbarui", tag: "Akun", go: "/admin/profil", btn: "Lihat Profil" },
+    user: { title: "Status Akun Diperbarui", tag: "Akun", go: "/user/profil", btn: "Lihat Profil" },
+  },
+};
+
+
 export default function NotificationBell({ role = "admin" }) {
   const admin = role === "admin";
   const nav = useNavigate();
@@ -105,7 +124,7 @@ export default function NotificationBell({ role = "admin" }) {
               {items === null ? <p className="empty">Memuat…</p>
                 : !items.length ? <p className="empty">Belum ada notifikasi.</p>
                 : items.map(n => {
-                    const base = KIND[n.type] || FALLBACK;
+                    const base = (!n.loan_id && AKUN[n.type]) || KIND[n.type] || FALLBACK;
                     const k = { icon: base.icon, cls: base.cls, ...(base[role] || { title: base.title }) };
                     return (
                       <div key={n.id} className={`nd-item ${k.cls}${n.is_read ? "" : " unread"}${k.late ? " late" : ""}`} onClick={() => markRead(n).then(load)}>
