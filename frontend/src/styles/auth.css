@@ -1,0 +1,119 @@
+@import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap);
+
+/* Halaman Daftar/Masuk gaya baru. Semua kelas berawalan rg- agar tidak bentrok. */
+.rg{
+  --rg-ink:#1F3D32;--rg-muted:#6F8379;--rg-g1:#3F7A62;--rg-g2:#B7BB63;--rg-err:#C0392B;
+  min-height:100vh;display:grid;grid-template-columns:minmax(0,53fr) minmax(0,47fr);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--rg-ink);background:#F5F9F4;
+}
+.rg *{box-sizing:border-box}
+.rg button,.rg input{font-family:inherit}
+
+/* ===== Panel kiri (ilustrasi) ===== */
+.rg-art{
+  position:relative;overflow:hidden;min-height:100vh;isolation:isolate;
+  background:linear-gradient(160deg,#2A5645 0%,#386C57 42%,#5E9A82 76%,#8EB9A2 100%);
+}
+.rg-art::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1.4px);background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 58%,#000 20%,transparent 78%);mask-image:radial-gradient(ellipse 60% 55% at 50% 58%,#000 20%,transparent 78%);
+}
+.rg-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.rg-fl{animation:rg-float 7s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.rg-fl.b{animation-delay:-2.3s}.rg-fl.c{animation-delay:-4.6s}
+@keyframes rg-float{50%{transform:translateY(-7px)}}
+
+.rg-brand{position:absolute;z-index:2;top:40px;left:47px;display:flex;align-items:center;gap:13px;color:#fff}
+.rg-logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;flex:none;color:#fff;
+  background:linear-gradient(145deg,#8DC3A4,#4C8B70);box-shadow:0 8px 18px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.4)}
+.rg-logo svg{width:22px;height:22px}
+.rg-brand b{display:block;font:800 22px "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.02em}
+.rg-brand b em{font-style:normal;color:#DDEAA9}
+.rg-brand small{display:block;margin-top:2px;font-size:11.5px;color:rgba(255,255,255,.82)}
+
+/* ===== Panel kanan (form) ===== */
+.rg-side{
+  position:relative;overflow:hidden;display:grid;place-items:center;padding:40px 24px;
+  background:
+    radial-gradient(700px 440px at 100% 0%,#E7F0D4 0%,transparent 62%),
+    radial-gradient(520px 420px at 0% 100%,#EAF3EA 0%,transparent 62%),
+    #F5F9F4;
+}
+.rg-side::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(95,140,120,.17) 1px,transparent 1.4px);background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 60% 50%,#000 10%,transparent 80%);mask-image:radial-gradient(ellipse 80% 70% at 60% 50%,#000 10%,transparent 80%)}
+.rg-leaves{position:absolute;right:0;bottom:0;width:300px;height:300px;pointer-events:none}
+.rg-wrap{position:relative;z-index:1;width:100%;max-width:380px;animation:rg-rise .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rg-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* logo bercincin putus-putus */
+.rg-mark{display:inline-block;padding:6px;border-radius:24px;border:1.5px dashed rgba(95,140,120,.5);
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(255,255,255,0) 70%)}
+.rg-mark span{display:grid;place-items:center;width:50px;height:50px;border-radius:16px;color:#fff;
+  background:linear-gradient(145deg,#7FB598,#3F7A62);box-shadow:0 10px 20px -8px rgba(47,99,80,.6),inset 0 1px 0 rgba(255,255,255,.35)}
+.rg-mark svg{width:25px;height:25px}
+
+.rg-title{margin:12px 0 22px;font:800 36px/1.05 "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.035em;color:var(--rg-ink)}
+
+/* pilihan peran */
+.rg-role{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:5px;margin:0 0 18px;border-radius:18px;background:#EAF0EA;
+  box-shadow:inset 0 1px 3px rgba(35,70,55,.08),0 0 0 1px #E3EBE4}
+.rg-role button{height:42px;border:0;border-radius:14px;background:transparent;display:flex;align-items:center;justify-content:center;gap:9px;
+  font-size:14.5px;font-weight:600;color:#6B8176;cursor:pointer;transition:background .18s,color .18s,box-shadow .18s}
+.rg-role button svg{width:17px;height:17px}
+.rg-role button:hover:not(.on){color:var(--rg-ink)}
+.rg-role button.on{background:#fff;color:var(--rg-ink);font-weight:700;box-shadow:0 6px 14px -8px rgba(35,70,55,.5)}
+.rg-role button:focus-visible{outline:3px solid #9FD2BD;outline-offset:1px}
+
+/* kolom isian */
+.rg-field{margin-bottom:10px}
+.rg-field label{display:block;margin:0 0 6px;font-size:13.5px;font-weight:700;color:#2B4A3E}
+.rg-in{position:relative;display:flex;align-items:center;height:45px;border-radius:16px;background:#fff;border:1px solid #E8F0EB;
+  box-shadow:0 8px 18px -12px rgba(35,70,55,.4);transition:border-color .15s,box-shadow .15s}
+.rg-in:hover{border-color:#D5E4DB}
+.rg-in:focus-within{border-color:#7FB59C;box-shadow:0 0 0 4px rgba(95,184,165,.18),0 8px 18px -12px rgba(35,70,55,.4)}
+.rg-in.bad{border-color:#E4A39C;box-shadow:0 0 0 4px rgba(192,57,43,.08)}
+.rg-lead{position:absolute;left:16px;width:18px;height:18px;color:#6F8379;pointer-events:none}
+.rg-in input{flex:1;min-width:0;height:100%;padding:0 16px 0 46px;border:0;outline:0;background:transparent;font-size:14.5px;color:var(--rg-ink)}
+.rg-in input::placeholder{color:#93A59C}
+.rg-eye{flex:none;width:44px;height:100%;display:grid;place-items:center;border:0;background:transparent;color:#6F8379;cursor:pointer}
+.rg-eye svg{width:19px;height:19px}
+.rg-eye:hover{color:var(--rg-ink)}
+.rg-err{margin:6px 0 0 4px;font-size:12.5px;color:var(--rg-err)}
+
+/* centang */
+.rg-check{display:flex;align-items:center;gap:10px;margin:14px 0 14px;font-size:13.5px;color:#3F5F52;cursor:pointer}
+.rg-check input{appearance:none;-webkit-appearance:none;flex:none;width:18px;height:18px;margin:0;border-radius:6px;border:1.5px solid #9DB8AA;background:#fff;cursor:pointer;
+  display:grid;place-items:center;transition:background .15s,border-color .15s}
+.rg-check input:checked{background:#4B7F69 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5.5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/12px no-repeat;border-color:#4B7F69}
+.rg-check input:focus-visible{outline:3px solid #9FD2BD;outline-offset:2px}
+
+/* tombol */
+.rg-submit{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:50px;border:0;border-radius:16px;cursor:pointer;color:#fff;
+  font:700 16px "Plus Jakarta Sans",Inter,sans-serif;
+  background:linear-gradient(100deg,#3F7A62 0%,#5C8F6C 55%,var(--rg-g2) 100%);
+  box-shadow:0 16px 26px -12px rgba(63,122,98,.7),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .18s,box-shadow .18s,filter .18s}
+.rg-submit svg{width:18px;height:18px}
+.rg-submit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 20px 30px -12px rgba(63,122,98,.75),inset 0 1px 0 rgba(255,255,255,.25)}
+.rg-submit:disabled{opacity:.7;cursor:progress}
+.rg-submit:focus-visible{outline:3px solid #9FD2BD;outline-offset:3px}
+
+.rg-foot{margin:18px 0 0;text-align:center;font-size:14px;color:#5F776B}
+.rg-foot a{color:var(--rg-ink);font-weight:700;text-decoration:none}
+.rg-foot a:hover{text-decoration:underline}
+
+.rg-alert{margin:0 0 16px;padding:12px 14px;border-radius:14px;font-size:13.5px;line-height:1.5}
+.rg-alert.ok{background:#E3F0E8;color:#2F6350;border:1px solid #C9E1D2}
+.rg-alert.error{background:#FBE9E7;color:#A63A32;border:1px solid #F2C9C5}
+
+/* ===== Responsif ===== */
+@media (max-width:1100px){.rg{grid-template-columns:minmax(0,46fr) minmax(0,54fr)}}
+@media (max-width:860px){
+  .rg{grid-template-columns:1fr}
+  .rg-art{display:none}
+  .rg-side{min-height:100vh;padding:32px 20px}
+  .rg-leaves{width:220px;height:220px}
+}
+@media (prefers-reduced-motion:reduce){.rg-fl,.rg-wrap{animation:none}.rg-submit,.rg-role button{transition:none}}

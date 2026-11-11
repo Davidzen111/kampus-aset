@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spesifikasi Tampilan Sidebar – KampusAset</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --page:#ECEEF6; --card:#fff; --ink:#1B2140; --muted:#7B83A0;
+  --side:#18203F; --side-ink:#9AA3C0; --accent:#5FB8A5; --accent-ink:#fff;
+  --main:#F3F3F8; --ph:#DCDFEA; --tile:#fff; --shadow:0 4px 18px rgba(24,32,63,.10);
+  --tip:#0F1530;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --page:#0E1224; --card:#171C33; --ink:#EEF0FA; --muted:#8F98B8;
+    --side:#0B0F20; --side-ink:#8F98B8; --main:#1F2540; --ph:#2E3556; --tile:#2A3152; --shadow:0 4px 18px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0E1224; --card:#171C33; --ink:#EEF0FA; --muted:#8F98B8;
+  --side:#0B0F20; --side-ink:#8F98B8; --main:#1F2540; --ph:#2E3556; --tile:#2A3152; --shadow:0 4px 18px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--page);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding:24px 24px 40px}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+h1{font-size:22px;margin:0;font-weight:700;display:flex;align-items:center;gap:10px}
+h1::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.sub{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.sim{display:flex;align-items:center;gap:10px;background:var(--card);padding:8px 10px 8px 14px;border-radius:10px;box-shadow:var(--shadow);font-size:12px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:0;cursor:pointer;background:var(--side);color:#fff;font:600 12px/1 inherit;font-family:inherit;padding:9px 14px;border-radius:7px}
+.btn:focus-visible,.nav a:focus-visible,.burger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn svg{width:14px;height:14px}
+
+/* panels */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.label{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;margin:0 0 14px}
+.num{flex:none;width:24px;height:24px;border-radius:50%;background:var(--side);color:#fff;font-size:11px;display:grid;place-items:center}
+.inline-ic{display:inline-block;width:15px;height:15px;vertical-align:-2px}
+.frame{display:flex;height:516px;background:var(--main);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+
+/* sidebar */
+.sidebar{flex:none;width:214px;background:var(--side);padding:20px 14px;display:flex;flex-direction:column;gap:4px;transition:width .3s ease;position:relative}
+.collapsed .sidebar,.sidebar.is-collapsed{width:66px}
+.brand{display:flex;align-items:center;gap:12px;padding:0 4px;margin-bottom:26px;height:36px}
+.logo{flex:none;width:36px;height:36px;border-radius:10px;background:var(--accent);display:grid;place-items:center;border:0;padding:0;cursor:default}
+.logo i{width:14px;height:14px;border-radius:5px;background:rgba(255,255,255,.4)}
+.brand b{color:#fff;font-size:16px;white-space:nowrap}
+.group{color:var(--side-ink);font-size:10px;letter-spacing:.14em;margin:0 8px 8px;height:14px;white-space:nowrap;overflow:hidden;transition:opacity .2s}
+.nav{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.nav a{position:relative;display:flex;align-items:center;gap:12px;height:36px;padding:0 11px;border-radius:9px;color:var(--side-ink);font-size:13px;text-decoration:none;white-space:nowrap}
+.nav a:hover{background:rgba(255,255,255,.06)}
+.nav a.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.nav a.on:hover{background:var(--accent)}
+.ic{flex:none;width:14px;height:14px;border-radius:4px;background:#59617F}
+.on .ic{background:#fff}
+.txt{overflow:hidden;transition:opacity .2s}
+.is-collapsed .txt,.is-collapsed .group,.is-collapsed .brand b{opacity:0;width:0;pointer-events:none}
+.is-collapsed .nav a{padding:0;justify-content:center;width:38px;margin:0 auto}
+.is-collapsed .group{margin:0 0 8px}
+.is-collapsed .brand{padding:0;justify-content:center}
+.is-collapsed .brand .logo{margin:0}
+.is-collapsed .brand{gap:0}
+
+/* tooltip */
+.nav a[data-tip]::after{content:attr(data-tip);position:absolute;left:calc(100% + 14px);top:50%;transform:translateY(-50%);background:var(--tip);color:#fff;font-size:12px;font-weight:500;padding:6px 10px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5;display:none}
+.is-collapsed .nav a[data-tip]::after{display:block}
+.is-collapsed .nav a:hover::after,.is-collapsed .nav a:focus-visible::after{opacity:1}
+
+/* main placeholder */
+.main{flex:1;min-width:0;padding:20px 22px;display:flex;flex-direction:column;gap:20px}
+.bar{display:flex;align-items:center;gap:12px}
+.burger{display:none;border:0;background:var(--card);border-radius:8px;width:32px;height:28px;cursor:pointer;place-items:center;color:var(--ink)}
+.interactive .burger{display:grid}
+.burger svg{width:16px;height:16px}
+.ph-line{height:14px;width:min(160px,45%);background:var(--ph);border-radius:7px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tiles i{height:56px;background:var(--tile);border-radius:10px}
+.panel{flex:1;background:var(--tile);border-radius:12px}
+
+.note{display:flex;gap:14px;align-items:center;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:16px 18px;margin-top:30px;font-size:12px;color:var(--muted)}
+.note::before{content:"";flex:none;width:18px;height:18px;border-radius:5px;background:var(--side)}
+
+@media (max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .wrap{padding:18px 14px 32px}
+  .frame{height:440px}
+}
+@media (prefers-reduced-motion:reduce){.sidebar,.txt,.group{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Spesifikasi Tampilan Sidebar – KampusAset</h1>
+      <p class="sub">Perbandingan Mode Expanded (Desktop) dan Collapsed (Mobile/Tablet)</p>
+    </div>
+    <div class="sim">
+      Simulasi Interaktif:
+      <button class="btn" id="switchBtn" type="button" aria-pressed="false">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+        Alihkan Tampilan
+      </button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- Panel 1: bisa dialihkan -->
+    <section>
+      <h2 class="label"><span class="num">1</span><span id="labelOne">Sidebar penuh (kondisi awal / desktop)</span></h2>
+      <div class="frame interactive" id="demo">
+        <aside class="sidebar" id="sbDemo" aria-label="Sidebar KampusAset">
+          <div class="brand"><span class="logo"><i></i></span><b>KampusAset</b></div>
+          <div class="group">UTAMA</div>
+          <ul class="nav">
+            <li><a href="#" class="on" data-tip="Beranda" aria-current="page"><span class="ic"></span><span class="txt">Beranda</span></a></li>
+            <li><a href="#" data-tip="Cari Aset"><span class="ic"></span><span class="txt">Cari Aset</span></a></li>
+            <li><a href="#" data-tip="Pengembalian"><span class="ic"></span><span class="txt">Pengembalian</span></a></li>
+            <li><a href="#" data-tip="Status &amp; Riwayat"><span class="ic"></span><span class="txt">Status &amp; Riwayat</span></a></li>
+            <li><a href="#" data-tip="Profil Saya"><span class="ic"></span><span class="txt">Profil Saya</span></a></li>
+          </ul>
+        </aside>
+        <div class="main">
+          <div class="bar">
+            <button class="burger" id="burger" type="button" aria-label="Ringkas atau perluas sidebar">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+            </button>
+            <div class="ph-line"></div>
+          </div>
+          <div class="tiles"><i></i><i></i><i></i><i></i></div>
+          <div class="panel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 2: tetap ringkas -->
+    <section>
+      <h2 class="label"><span class="num">2</span>
+        <span>Setelah ikon
+          <svg class="inline-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+          diklik — sidebar ringkas (mobile/tablet)</span></h2>
+      <div class="frame">
+        <aside class="sidebar is-collapsed" aria-label="Sidebar ringkas KampusAset">
+          <div class="brand"><span class="logo"><i></i></span></div>
+          <div class="group">UTAMA</div>
+          <ul class="nav">
+            <li><a href="#" class="on" data-tip="Beranda" aria-label="Beranda" aria-current="page"><span class="ic"></span></a></li>
+            <li><a href="#" data-tip="Cari Aset" aria-label="Cari Aset"><span class="ic"></span></a></li>
+            <li><a href="#" data-tip="Pengembalian" aria-label="Pengembalian"><span class="ic"></span></a></li>
+            <li><a href="#" data-tip="Status &amp; Riwayat" aria-label="Status &amp; Riwayat"><span class="ic"></span></a></li>
+            <li><a href="#" data-tip="Profil Saya" aria-label="Profil Saya"><span class="ic"></span></a></li>
+          </ul>
+        </aside>
+        <div class="main">
+          <div class="bar"><div class="ph-line"></div></div>
+          <div class="tiles"><i></i><i></i><i></i><i></i></div>
+          <div class="panel"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <p class="note">Label menu disembunyikan dan hanya ikon yang ditampilkan pada mode ringkas; nama setiap menu tetap dapat diakses melalui tooltip saat ikon disentuh/di-hover.</p>
+</div>
+
+<script>
+(function(){
+  var sb = document.getElementById('sbDemo');
+  var btn = document.getElementById('switchBtn');
+  var burger = document.getElementById('burger');
+  var label = document.getElementById('labelOne');
+  function set(collapsed){
+    sb.classList.toggle('is-collapsed', collapsed);
+    btn.setAttribute('aria-pressed', String(collapsed));
+    label.textContent = collapsed ? 'Sidebar ringkas (setelah ikon diklik)' : 'Sidebar penuh (kondisi awal / desktop)';
+  }
+  function toggle(){ set(!sb.classList.contains('is-collapsed')); }
+  btn.addEventListener('click', toggle);
+  burger.addEventListener('click', toggle);
+
+  // Menu aktif berpindah saat diklik (hanya simulasi)
+  document.querySelectorAll('.nav a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var nav = a.closest('.nav');
+      nav.querySelectorAll('a').forEach(function(x){ x.classList.remove('on'); x.removeAttribute('aria-current'); });
+      a.classList.add('on'); a.setAttribute('aria-current','page');
+    });
+  });
+})();
+</script>
+</body>
+</html>

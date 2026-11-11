@@ -1,0 +1,74 @@
+/* Halaman Cari Aset. Semua kelas berawalan cs- agar tidak bentrok dengan CSS lain. */
+:root{
+  --cs-green:#3A6B5E; --cs-green-d:#2A5247; --cs-ink:#1D3B33; --cs-muted:#6B7C76;
+  --cs-line:#E7EEEA; --cs-shadow:0 10px 30px -14px rgba(31,70,58,.28);
+}
+
+/* ===== Bar filter ===== */
+.cs-filters{display:flex;align-items:stretch;background:#fff;border-radius:20px;box-shadow:var(--cs-shadow);margin-bottom:22px;overflow:hidden}
+.cs-f{display:flex;align-items:center;gap:12px;padding:0 22px;height:56px;color:var(--cs-muted);cursor:text}
+.cs-f svg{width:19px;height:19px;flex:none}
+.cs-f input,.cs-f select{border:0;outline:0;background:transparent;font:inherit;font-size:14.5px;color:var(--cs-ink);width:100%;min-width:0}
+.cs-f input::placeholder{color:#8A9A94}
+.cs-f-search{flex:1}
+.cs-f-cat,.cs-f-date{border-left:1px solid var(--cs-line);cursor:pointer}
+.cs-f-cat{width:240px}
+.cs-f-cat select{appearance:none;-webkit-appearance:none;font-weight:600;cursor:pointer}
+.cs-f-cat svg:last-child{width:16px;height:16px;margin-left:auto;pointer-events:none}
+.cs-f-date{width:190px}
+.cs-f-date input{font-weight:600;cursor:pointer}
+.cs-f:focus-within{background:#F6FAF8;color:var(--cs-green)}
+.cs-f-search input[type=search]::-webkit-search-cancel-button{cursor:pointer}
+
+/* ===== Grid kartu ===== */
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
+.cs-state{grid-column:1/-1;text-align:center;color:var(--cs-muted);padding:48px 0}
+
+.cs-card{display:flex;flex-direction:column;background:#fff;border-radius:24px;overflow:hidden;text-decoration:none;color:inherit;
+  box-shadow:var(--cs-shadow);border:1px solid rgba(255,255,255,.7);transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s}
+.cs-card:hover{transform:translateY(-4px);box-shadow:0 22px 40px -18px rgba(31,70,58,.38)}
+.cs-card:focus-visible{outline:3px solid #7FD3BF;outline-offset:3px}
+
+/* area gambar */
+.cs-pic{position:relative;aspect-ratio:16/10.5;display:grid;place-items:center;overflow:hidden}
+.cs-pic.mint{background:radial-gradient(ellipse at 50% 45%,#EAF4EE 0%,#D3E6DA 100%)}
+.cs-pic.blue{background:radial-gradient(ellipse at 50% 45%,#EEF3F8 0%,#CFDDEA 100%)}
+.cs-pic.sand{background:radial-gradient(ellipse at 50% 45%,#FBF6E6 0%,#EFE0B8 100%)}
+/* titik-titik halus + tanda plus dekoratif */
+.cs-pic::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.85) 1.2px,transparent 1.6px);background-size:22px 22px;opacity:.7;
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 30%,transparent 100%);mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 30%,transparent 100%)}
+.cs-pic::after{content:"+";position:absolute;right:9%;top:14%;font-size:26px;font-weight:300;color:rgba(255,255,255,.95);pointer-events:none}
+.cs-pic > :not(.cs-badge){position:relative;z-index:1;max-width:78%;max-height:78%;width:auto;height:auto;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.cs-card:hover .cs-pic > :not(.cs-badge){transform:scale(1.05)}
+
+/* badge status melayang */
+.cs-badge{position:absolute;z-index:2;top:14px;left:14px;display:inline-flex;align-items:center;gap:7px;padding:6px 12px 6px 10px;
+  border-radius:999px;background:rgba(255,255,255,.94);font-size:12px;font-weight:700;box-shadow:0 4px 12px -4px rgba(0,0,0,.18)}
+.cs-badge i{width:9px;height:9px;border-radius:50%}
+.cs-badge.ok{color:#2F594E}.cs-badge.ok i{background:#3A6B5E;box-shadow:0 0 0 3px rgba(58,107,94,.2)}
+.cs-badge.use{color:#9A6A12}.cs-badge.use i{background:#E3A93B;box-shadow:0 0 0 3px rgba(227,169,59,.25)}
+
+/* bagian bawah kartu */
+.cs-body{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px 18px 20px}
+.cs-txt{min-width:0}
+.cs-txt h3{margin:0 0 9px;font-family:"Plus Jakarta Sans",Inter,sans-serif;font-size:16.5px;font-weight:800;letter-spacing:-.01em;color:var(--cs-ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px 4px 9px;border-radius:999px;background:#EAF2EE;color:#5B6F68;font-size:12px;font-weight:600}
+.cs-chip svg{width:14px;height:14px}
+
+/* tombol panah */
+.cs-go{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(145deg,#5E9484,var(--cs-green-d));box-shadow:0 8px 16px -6px rgba(42,82,71,.6),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .25s}
+.cs-go svg{width:19px;height:19px}
+.cs-card:hover .cs-go{transform:translateX(3px)}
+
+/* ===== Responsif ===== */
+@media (max-width:760px){
+  .cs-filters{flex-direction:column;border-radius:18px}
+  .cs-f{height:52px}
+  .cs-f-cat,.cs-f-date{width:auto;border-left:0;border-top:1px solid var(--cs-line)}
+  .cs-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.cs-card,.cs-go,.cs-pic > *{transition:none}}
