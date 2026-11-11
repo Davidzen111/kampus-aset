@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import { useLoad, todayISO, ASSET_BADGE, catOf } from "../../utils";
 import { Icon, AssetThumb } from "../../components/ui";
 
-// true  = tampilkan foto asli aset bila ada
-// false = selalu tampilkan ilustrasi (sesuai desain)
-const PAKAI_FOTO = false;
+
+const PAKAI_FOTO = true;
 
 // warna latar kartu bergantian
 const TINTS = ["green", "blue", "green", "blue", "sand", "green"];
