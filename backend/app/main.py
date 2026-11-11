@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.routers import auth, users, assets, loans, notifications, dashboard, reports, categories
 
-app = FastAPI(title="KampusAset API")
+app = FastAPI(title="KampusAset API", root_path="/api")
 
 app.add_middleware(
     CORSMiddleware,
