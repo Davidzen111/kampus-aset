@@ -1,5 +1,3 @@
-import os
-import uuid
 from typing import Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
@@ -11,13 +9,9 @@ from app.database import get_db
 from app.models import User, Notification
 from app.schemas.auth import UserResponse
 from app.schemas.user import ProfileUpdate, StatusUpdate
+from app.services.storage import delete_image, save_image
 
 router = APIRouter(prefix="/users", tags=["Users"])
-
-PROFILE_DIR = os.path.join("uploads", "profiles")
-PHOTO_TYPES = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
-PHOTO_MAX_BYTES = 5 * 1024 * 1024
-
 
 def get_user_or_404(db: Session, user_id: int) -> User:
     user = db.get(User, user_id)
@@ -53,28 +47,18 @@ async def upload_my_photo(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    ext = PHOTO_TYPES.get(foto.content_type)
-    if ext is None:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Format foto harus JPG, PNG, atau WEBP")
-    content = await foto.read()
-    if len(content) > PHOTO_MAX_BYTES:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Ukuran foto maksimal 5 MB")
-
-    os.makedirs(PROFILE_DIR, exist_ok=True)
-    name = f"{current_user.id}_{uuid.uuid4().hex[:10]}{ext}"
-    with open(os.path.join(PROFILE_DIR, name), "wb") as f:
-        f.write(content)
-
-    # hapus foto lama bila ada
+    new_url = await save_image(foto, "profiles")  # kirim ke Vercel Blob
     old = current_user.photo_url
-    if old and old.startswith("/uploads/profiles/"):
-        try:
-            os.remove(os.path.join(PROFILE_DIR, os.path.basename(old)))
-        except OSError:
-            pass
 
-    current_user.photo_url = f"/uploads/profiles/{name}"
-    db.commit()
+    current_user.photo_url = new_url
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        delete_image(new_url)
+        raise
+
+    delete_image(old)  # hapus foto lama hanya setelah commit berhasil
     db.refresh(current_user)
     return current_user
 
