@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useOutletContext } from "react-router-dom";
-import { api, clearSession } from "../api";
+import { api, clearSession, goTo } from "../api";
 import { ROUTES } from "../config";
 import { fileUrl, initials, photoOf } from "../utils";
 import { Icon } from "../components/ui";
@@ -46,7 +46,7 @@ function AdminSidebar({ badge }) {
   const logout = async () => {
     try { await api("/auth/logout", { method: "POST" }); } catch { /* abaikan */ }
     clearSession();
-    location.replace(ROUTES.login);
+    goTo(ROUTES.login);
   };
 
   return (

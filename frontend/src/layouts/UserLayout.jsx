@@ -1,5 +1,5 @@
 import { Link, Outlet, NavLink, useLocation, useOutletContext } from "react-router-dom";
-import { api, clearSession } from "../api";
+import { api, clearSession, goTo } from "../api";
 import { fileUrl, initials, photoOf } from "../utils";
 import { ROUTES } from "../config";
 import { Icon } from "../components/ui";
@@ -60,7 +60,7 @@ export default function UserLayout() {
   const logout = async () => {
     try { await api("/auth/logout", { method: "POST" }); } catch { /* abaikan */ }
     clearSession();
-    location.replace(ROUTES.login);
+    goTo(ROUTES.login);
   };
 
   return (

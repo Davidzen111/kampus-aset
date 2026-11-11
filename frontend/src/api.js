@@ -1,5 +1,7 @@
 import { API_BASE, ROUTES } from "./config";
 
+// Pindah halaman penuh dengan HashRouter: path biasa diberi "/#"
+export const goTo = path => location.replace("/#" + path);
 
 const read = k => localStorage.getItem(k) || sessionStorage.getItem(k);
 
@@ -29,7 +31,7 @@ export function setStoredUser(u) {
 
 function expired() {
   clearSession();
-  location.replace(ROUTES.login);
+  goTo(ROUTES.login);
   return new Error("Sesi berakhir");
 }
 
