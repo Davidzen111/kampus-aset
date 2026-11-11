@@ -6,10 +6,6 @@
   },
   "rewrites": [
     { "source": "/api/(.*)", "destination": { "service": "backend" } },
-    { "handle": "filesystem" },
-    {
-      "source": "/(.*)",
-      "destination": { "service": "frontend", "path": "index.html" }
-    }
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
   ]
 }
