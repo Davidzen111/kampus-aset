@@ -35,24 +35,6 @@ const KIND = {
 };
 const FALLBACK = { icon: "bell", cls: "blue", title: "Notifikasi" };
 
-const AKUN = {
-  persetujuan: {
-    icon: "shield", cls: "green",
-    admin: { title: "Akun Disetujui", tag: "Disetujui", go: "/admin/profil", btn: "Lihat Profil" },
-    user: { title: "Akun Disetujui", tag: "Disetujui", go: "/user/profil", btn: "Lihat Profil" },
-  },
-  penolakan: {
-    icon: "x", cls: "red",
-    admin: { title: "Pendaftaran Ditolak", tag: "Ditolak" },
-    user: { title: "Pendaftaran Ditolak", tag: "Ditolak" },
-  },
-  verifikasi: {
-    icon: "shield", cls: "blue",
-    admin: { title: "Status Akun Diperbarui", tag: "Akun", go: "/admin/profil", btn: "Lihat Profil" },
-    user: { title: "Status Akun Diperbarui", tag: "Akun", go: "/user/profil", btn: "Lihat Profil" },
-  },
-};
-
 
 const AKUN = {
   persetujuan: {
