@@ -1,19 +1,31 @@
 import uuid
-from pathlib import Path
 
 from fastapi import HTTPException, UploadFile, status
+from vercel.blob import AsyncBlobClient, BlobClient
 
-UPLOAD_DIR = Path("uploads")
 ALLOWED_TYPES = {
     "image/jpeg": ".jpg",
     "image/png": ".png",
     "image/webp": ".webp",
 }
-MAX_SIZE = 5 * 1024 * 1024  # 5 MB
+# Batas body request di Vercel sekitar 4,5 MB, jadi 4 MB agar aman
+MAX_SIZE = 4 * 1024 * 1024
+
+BLOB_HOST = "blob.vercel-storage.com"
+
+
+def _url_dari(hasil) -> str:
+    # Tahan terhadap perbedaan bentuk hasil (objek atau dict)
+    url = getattr(hasil, "url", None)
+    if url is None and isinstance(hasil, dict):
+        url = hasil.get("url")
+    if not url:
+        raise HTTPException(status.HTTP_502_BAD_GATEWAY, "Gagal menyimpan foto")
+    return url
 
 
 async def save_image(file: UploadFile, subfolder: str) -> str:
-    """Simpan gambar, kembalikan URL relatif, mis. /uploads/assets/abc123.jpg"""
+    """Kirim gambar ke Vercel Blob, kembalikan URL publik lengkap."""
     ext = ALLOWED_TYPES.get(file.content_type)
     if ext is None:
         raise HTTPException(
@@ -23,22 +35,28 @@ async def save_image(file: UploadFile, subfolder: str) -> str:
     content = await file.read()
     if len(content) > MAX_SIZE:
         raise HTTPException(
-            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Ukuran foto maksimal 5 MB"
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, "Ukuran foto maksimal 4 MB"
         )
 
-    folder = UPLOAD_DIR / subfolder
-    folder.mkdir(parents=True, exist_ok=True)
-    filename = f"{uuid.uuid4().hex}{ext}"
-    (folder / filename).write_bytes(content)
-    return f"/uploads/{subfolder}/{filename}"
+    pathname = f"{subfolder}/{uuid.uuid4().hex}{ext}"
+    try:
+        client = AsyncBlobClient()  # membaca BLOB_READ_WRITE_TOKEN otomatis
+        hasil = await client.put(
+            pathname, content, access="public", content_type=file.content_type
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        print("[storage] upload gagal:", e)
+        raise HTTPException(status.HTTP_502_BAD_GATEWAY, "Gagal menyimpan foto")
+    return _url_dari(hasil)
 
 
 def delete_image(url: str | None) -> None:
-    if not url:
+    # Hanya hapus URL Blob. Path lama "/uploads/..." diabaikan.
+    if not url or BLOB_HOST not in url:
         return
-    path = Path(url.lstrip("/"))
     try:
-        path.resolve().relative_to(UPLOAD_DIR.resolve())  # pastikan masih di dalam uploads/
-    except ValueError:
-        return
-    path.unlink(missing_ok=True)
+        BlobClient().delete([url])
+    except Exception as e:
+        print("[storage] hapus gagal:", e)
