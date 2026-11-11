@@ -3,13 +3,10 @@ import { Link } from "react-router-dom";
 import { useLoad, todayISO, ASSET_BADGE, catOf } from "../../utils";
 import { Icon, AssetThumb } from "../../components/ui";
 
-
 const PAKAI_FOTO = true;
 
-// warna latar kartu bergantian
 const TINTS = ["green", "blue", "green", "blue", "sand", "green"];
 
-// jenis ilustrasi dari nama / kategori aset
 const kindOf = a => {
   const t = `${a.name || ""} ${catOf(a)}`.toLowerCase();
   if (/proyektor|projector|video/.test(t)) return "projector";

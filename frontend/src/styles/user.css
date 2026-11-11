@@ -472,6 +472,7 @@
 @media (max-width:1000px){.app.user .pf{grid-template-columns:1fr}}
 @media (max-width:640px){.app.user .pf-form{grid-template-columns:1fr}.app.user .pf .card.pad,.app.user .pf .form{padding:20px!important}}
 
+
 .app.user .photo{height:auto;min-height:120px;max-height:260px;border-radius:18px;background:#EEF4F0}
 .app.user .photo img{width:100%;height:auto;max-height:260px;object-fit:contain}
 
