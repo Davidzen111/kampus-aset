@@ -168,7 +168,8 @@ def delete_asset(
     asset = get_asset_or_404(db, asset_id)
 
     loans = db.query(Loan).filter(Loan.asset_id == asset_id)
-    if loans.first():
+    has_loans = loans.first() is not None
+    if has_loans:
         if not force:
             raise HTTPException(
                 status.HTTP_409_CONFLICT,
@@ -183,17 +184,19 @@ def delete_asset(
                 status.HTTP_409_CONFLICT,
                 "Aset masih memiliki pengajuan atau peminjaman aktif; selesaikan dulu.",
             )
-        loans.delete(synchronize_session=False)
 
     photo_url = asset.photo_url
     try:
+        if has_loans:
+            loans.delete(synchronize_session=False)
         db.delete(asset)
         db.commit()
-    except IntegrityError:
+    except IntegrityError as e:
         db.rollback()
         raise HTTPException(
             status.HTTP_409_CONFLICT,
-            "Aset masih dipakai data lain (misalnya notifikasi) dan tidak dapat dihapus.",
+            "Aset masih dipakai data lain (misalnya notifikasi) dan tidak dapat dihapus. "
+            f"Detail: {str(e.orig)[:200]}",
         )
     delete_image(photo_url)
     return {"message": "Aset dihapus"}
