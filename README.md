@@ -479,15 +479,9 @@ curl -X POST http://localhost:3000/api/auth/register \
 
 | Info      | Detail                                              |
 | --------- | --------------------------------------------------- |
-| **Nama**  | _(isi nama developer)_                              |
+| **Nama**  | _KELOMPOK 3 PROYEK PERANGKAT LUNAK B_               |
 | **Tema**  | Manajemen & Peminjaman Aset Kampus                  |
 | **Stack** | FastAPI, React, PostgreSQL, Vercel Blob             |
 | **Tahun** | 2026                                                |
-
----
-
-## Lisensi
-
-_(isi keterangan lisensi / tujuan pembuatan project)_
 
 ---
