@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { api, explainError } from "../../api";
-import { fileUrl, fmtDate, initials, photoOf, todayISO, ASSET_BADGE, catOf } from "../../utils";
+import { fileUrl, fmtDate, fmtRange, initials, photoOf, todayISO, ASSET_BADGE, catOf } from "../../utils";
 import { toast } from "../../components/dialogs";
 import { Icon, Badge, PhotoPicker, ProfileDialog } from "../../components/ui";
+
+const SCHED_LABEL = { menunggu: ["Menunggu", "y"], disetujui: ["Disetujui", "g"] };
 
 export default function DetailAset() {
   const { me } = useOutletContext();
@@ -13,6 +15,7 @@ export default function DetailAset() {
 
   const [asset, setAsset] = useState(null);
   const [loadErr, setLoadErr] = useState("");
+  const [sched, setSched] = useState(null);
   const [f, setF] = useState({ start: "", end: "", purpose: "", note: "" });
   const [photo, setPhoto] = useState(null);
   const [errors, setErrors] = useState({});
@@ -29,7 +32,22 @@ export default function DetailAset() {
     api(`/assets/${id}`).then(setAsset).catch(e => setLoadErr(e.status === 404 ? "Aset tidak ditemukan" : "Gagal memuat aset"));
   }, [id]);
 
-  // Hanya aset maintenance yang ditolak; bentrok jadwal dicek backend.
+
+  const loadSched = useCallback(() => {
+    if (!id) return;
+    api(`/assets/${id}/schedule`)
+      .then(l => setSched((Array.isArray(l) ? l : []).filter(s => s.tanggal_kembali_rencana >= today)))
+      .catch(() => setSched([]));
+  }, [id, today]);
+  useEffect(() => { loadSched(); }, [loadSched]);
+
+
+  const clash = (() => {
+    if (!sched || !f.start) return null;
+    const end = f.end && f.end >= f.start ? f.end : f.start;
+    return sched.find(s => f.start <= s.tanggal_kembali_rencana && end >= s.tanggal_pinjam) || null;
+  })();
+
   const available = asset && asset.status !== "maintenance";
   const [badgeLabel, badgeCls] = asset ? (ASSET_BADGE[asset.status] || [asset.status, ""]) : ["", ""];
 
@@ -61,6 +79,7 @@ export default function DetailAset() {
       nav("/user/status-riwayat");
     } catch (e2) {
       setAlert({ type: "error", msg: explainError(e2, "Pengajuan gagal. Coba lagi beberapa saat.") });
+      if (e2.status === 409) loadSched(); 
       setSending(false);
     }
   };
@@ -86,6 +105,21 @@ export default function DetailAset() {
         </section>
 
         <section className="card pad">
+          <div className="sec">JADWAL TERISI <small>(hindari tanggal ini saat mengajukan)</small></div>
+          {sched === null ? <p className="sched-note">Memuat jadwal…</p>
+            : !sched.length ? <p className="sched-note">Belum ada jadwal terisi. Semua tanggal masih kosong.</p>
+            : sched.map((s, i) => {
+                const [lab, cls] = SCHED_LABEL[s.status] || [s.status, ""];
+                return (
+                  <div className="sched-item" key={i}>
+                    <span className="sched-date"><Icon n="cal" />{fmtRange(s.tanggal_pinjam, s.tanggal_kembali_rencana)}</span>
+                    <Badge cls={cls}>{lab}</Badge>
+                  </div>
+                );
+              })}
+        </section>
+
+        <section className="card pad">
           <div className="sec">DATA PEMINJAM <small>(otomatis dari profil akun)</small></div>
           {[["Nama", me.name], ["NIM/NIP", me.nim_nip], ["Program Studi", me.program_studi], ["No. Telepon", me.phone]].map(([k, v]) => (
             <div className="kv" key={k}><span>{k}</span><b>{v || "–"}</b></div>
@@ -105,6 +139,12 @@ export default function DetailAset() {
               <input type="date" min={f.start || today} value={f.end} onChange={set("end")} aria-invalid={!!errors.end} />
               {errors.end && <p className="ferr">{errors.end}</p>}</div>
           </div>
+          {clash && (
+            <div className="alert warn" role="status">
+              Tanggal yang kamu pilih beririsan dengan jadwal yang sudah terisi
+              ({fmtRange(clash.tanggal_pinjam, clash.tanggal_kembali_rencana)}). Pengajuan kemungkinan ditolak; pilih tanggal lain.
+            </div>
+          )}
           <div className="fld"><label>Keperluan peminjaman</label>
             <textarea rows={2} placeholder="cth: presentasi tugas akhir kelompok…" value={f.purpose} onChange={set("purpose")} aria-invalid={!!errors.purpose} />
             {errors.purpose && <p className="ferr">{errors.purpose}</p>}</div>
@@ -117,10 +157,10 @@ export default function DetailAset() {
             <div className="contact">
               <div className="chead">KONTAK ADMIN <small>(hubungi jika ada kendala peminjaman)</small></div>
               <button type="button" className="cwho cbtn" title="Lihat profil admin" onClick={() => setShowAdmin(true)}>
-  <span className="ca" style={fileUrl(photoOf(contact)) ? { backgroundImage: `url("${fileUrl(photoOf(contact))}")` } : undefined}>{photoOf(contact) ? "" : initials(contact.name)}</span>
-  <div><b>{contact.name}</b><small>{contact.role || `Admin${contact.program_studi ? ` · ${contact.program_studi}` : ""}`}</small></div>
-  <span className="cmore">Lihat profil</span>
-</button>
+                <span className="ca" style={fileUrl(photoOf(contact)) ? { backgroundImage: `url("${fileUrl(photoOf(contact))}")` } : undefined}>{photoOf(contact) ? "" : initials(contact.name)}</span>
+                <div><b>{contact.name}</b><small>{contact.role || `Admin${contact.program_studi ? ` · ${contact.program_studi}` : ""}`}</small></div>
+                <span className="cmore">Lihat profil</span>
+              </button>
               {contact.phone && <div className="cline"><Icon n="phone" />{contact.phone}</div>}
               {contact.email && <div className="cline"><Icon n="mail" />{contact.email}</div>}
             </div>

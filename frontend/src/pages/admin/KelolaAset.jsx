@@ -7,7 +7,6 @@ import "../../styles/kelola-aset.css";
 
 const STATUS = { tersedia: ["Tersedia", "g"], dipinjam: ["Dipinjam", "b"], maintenance: ["Maintenance", "y"] };
 
-// Backend belum punya kolom kode aset; ini hanya tampilan turunan dari id.
 const kode = a => "AST-" + String(a.id).padStart(4, "0");
 
 const DEFAULT_CATEGORIES = ["Elektronik", "Ruangan", "Kendaraan", "Furnitur", "Peralatan Lab", "Perlengkapan Olahraga"];

@@ -478,3 +478,10 @@
 
 .app.user .drop:has(img){height:200px;aspect-ratio:auto;background:#EEF4F0}
 .app.user .drop img{object-fit:contain}
+
+.app.user .sched-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:8px;border-radius:14px;background:#F5F9F6}
+.app.user .sched-item:last-child{margin-bottom:12px}
+.app.user .sched-date{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:#1F3D32}
+.app.user .sched-date svg{width:16px;height:16px;color:#4F8A6F}
+.app.user .sched-note{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#F5F9F6;font-size:12.5px;line-height:1.5;color:#5E7469}
+.alert.warn{background:#FBF1D9;color:#7A5712;border:1px solid #F0DDAE}

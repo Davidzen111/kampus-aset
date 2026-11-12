@@ -45,7 +45,6 @@ async def create_loan(
     if user.is_admin:
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Admin tidak dapat mengajukan peminjaman")
 
-    # Data identitas dipakai otomatis oleh Admin, jadi profil harus lengkap
     if not (user.nim_nip and user.program_studi and user.phone):
         raise HTTPException(
             status.HTTP_400_BAD_REQUEST,
@@ -60,8 +59,6 @@ async def create_loan(
             "Tanggal kembali tidak boleh lebih awal dari tanggal pinjam",
         )
 
-    # Kunci baris aset: dua pengajuan bersamaan untuk aset yang sama
-    # diproses bergantian, sehingga cek konflik tidak bisa "kebobolan".
     asset = db.query(Asset).filter(Asset.id == asset_id).with_for_update().first()
     if asset is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Aset tidak ditemukan")
@@ -85,7 +82,7 @@ async def create_loan(
     )
     db.add(loan)
     try:
-        db.flush()  # agar loan.id terisi untuk notifikasi
+        db.flush()  
         notify_admins(
             db, loan.id, "pengajuan",
             f"{user.name} mengajukan peminjaman {asset.name} "
@@ -115,14 +112,11 @@ def my_loans(
     elif kelompok == "riwayat":
         query = query.filter(Loan.status.in_(["ditolak", "dikembalikan"]))
     elif kelompok == "siap_kembali":
-        # "Aset sedang dipinjam - siap dikembalikan": disetujui dan belum
-        # diajukan pengembaliannya, atau pengembaliannya pernah ditolak
         query = query.filter(
             Loan.status == "disetujui",
             (Loan.status_pengembalian.is_(None)) | (Loan.status_pengembalian == "ditolak"),
         )
     elif kelompok == "pengembalian":
-        # "Status verifikasi pengembalian": semua yang sudah pernah diajukan
         query = query.filter(Loan.status_pengembalian.is_not(None))
     return query.order_by(Loan.created_at.desc()).all()
 
@@ -176,7 +170,6 @@ def approve_loan(
     admin: User = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    # Kunci baris loan dan asset agar tidak bentrok dengan aksi lain
     loan = db.query(Loan).filter(Loan.id == loan_id).with_for_update().first()
     if loan is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Peminjaman tidak ditemukan")
@@ -280,7 +273,7 @@ async def submit_return(
         )
 
     asset = db.get(Asset, loan.asset_id)
-    old_photo = loan.foto_kondisi_akhir  # ada bila pengembalian sebelumnya ditolak
+    old_photo = loan.foto_kondisi_akhir  
     new_photo = await save_image(foto_kondisi_akhir, "returns")
 
     loan.foto_kondisi_akhir = new_photo
@@ -301,7 +294,7 @@ async def submit_return(
         delete_image(new_photo)
         raise
 
-    delete_image(old_photo)  # hapus foto lama hanya setelah commit berhasil
+    delete_image(old_photo)  
     return get_loan_or_404(db, loan_id)
 
 
@@ -335,7 +328,6 @@ def verify_return(
         loan.status_pengembalian = "diterima"
         loan.status = "dikembalikan"
 
-        # Aset kembali 'tersedia' hanya bila tidak ada peminjaman lain yang masih disetujui
         masih_dipinjam = db.query(Loan).filter(
             Loan.asset_id == asset.id,
             Loan.status == "disetujui",
@@ -346,7 +338,6 @@ def verify_return(
 
         message = f"Pengembalian {asset.name} diterima. Terima kasih."
     else:
-        # status peminjaman tetap 'disetujui'; User dapat mengajukan ulang
         loan.status_pengembalian = "ditolak"
         message = (
             f"Pengembalian {asset.name} ditolak. Alasan: {data.alasan.strip()}. "

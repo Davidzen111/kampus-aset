@@ -13,7 +13,6 @@ export const fmtDate = v => v
   ? new Date(String(v).slice(0, 10) + "T00:00").toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
   : "-";
 
-// Status peminjaman: halaman lama memakai nama field berbeda (status_pinjam / status).
 export const loanStatus = l => l.status_pinjam ?? l.status;
 
 export function toDate(v) {
@@ -35,17 +34,14 @@ export function relTime(v) {
   return `${Math.floor(m / 1440)} hari lalu`;
 }
 
-// Angka YYYYMMDD untuk membandingkan tanggal tanpa pengaruh jam/zona.
 export const dayKey = v => { const d = toDate(v); return d ? d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate() : 0; };
 
-// Tanggal lokal hari ini: "YYYY-MM-DD"
 export function todayISO() {
   const d = new Date(), p = n => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
 const BLN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-// "12–13 Sep 2026", "30 Sep – 02 Okt 2026", atau satu tanggal bila sama
 export function fmtRange(a, b) {
   const d1 = toDate(a), d2 = toDate(b);
   if (!d1) return "";
@@ -58,7 +54,6 @@ export function fmtRange(a, b) {
 }
 
 // ===== Pemuat data =====
-// Ambil data dari path API. rows === null artinya masih memuat.
 export function useLoad(path) {
   const [rows, setRows] = useState(null);
   const reload = useCallback(
@@ -69,13 +64,11 @@ export function useLoad(path) {
   return [rows, reload];
 }
 
-// Jalankan aksi, lalu muat ulang data; error tampil sebagai toast.
 export async function run(fn, reload) {
   try { await fn(); await reload?.(); } catch (e) { toast(e.message, true); }
 }
 
 // ===== Pembantu halaman user =====
-// Nama kolom foto di data user (dicoba berurutan)
 export const photoOf = u => ["photo_url", "foto_profil", "foto", "avatar_url", "avatar"].map(k => u?.[k]).find(Boolean) || "";
 
 export const catOf = a => a?.category?.name || a?.category || "";

@@ -40,7 +40,6 @@ def list_assets(
     return query.order_by(Asset.created_at.desc()).all()
 
 
-# Harus di atas /{asset_id} supaya "categories" tidak dibaca sebagai id
 @router.get("/categories", response_model=list[str])
 def list_categories(
     user: User = Depends(get_current_user),
@@ -102,7 +101,7 @@ async def create_asset(
         db.commit()
     except Exception:
         db.rollback()
-        delete_image(photo_url)  # jangan tinggalkan file yatim
+        delete_image(photo_url)  
         raise
     db.refresh(asset)
     return asset
@@ -123,7 +122,6 @@ async def update_asset(
 ):
     asset = get_asset_or_404(db, asset_id)
 
-    # Status 'dipinjam' diatur otomatis oleh proses peminjaman, bukan manual
     if status_aset is not None and status_aset != asset.status:
         if asset.status == "dipinjam":
             raise HTTPException(
@@ -153,7 +151,7 @@ async def update_asset(
         delete_image(new_photo)
         raise
 
-    delete_image(old_photo)  # hapus foto lama hanya setelah commit berhasil
+    delete_image(old_photo)  
     db.refresh(asset)
     return asset
 
@@ -176,7 +174,7 @@ def delete_asset(
                 "Aset memiliki riwayat peminjaman dan tidak dapat dihapus. "
                 "Ubah statusnya menjadi 'maintenance'.",
             )
-        # Hapus paksa tidak boleh bila masih ada pengajuan/peminjaman aktif
+    
         if asset.status == "dipinjam" or loans.filter(
             Loan.status.in_(["menunggu", "disetujui"])
         ).first():
@@ -188,7 +186,6 @@ def delete_asset(
     photo_url = asset.photo_url
     try:
         if loan_ids:
-            # Urutan penting: notifikasi -> peminjaman -> aset (semua FK bersifat RESTRICT)
             db.query(Notification).filter(
                 Notification.loan_id.in_(loan_ids)
             ).delete(synchronize_session=False)
