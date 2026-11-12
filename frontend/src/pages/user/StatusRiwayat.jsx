@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { fmtRange, loanStatus, toDate, useLoad, loanBadge } from "../../utils";
+import { api } from "../../api";
+import { fmtRange, loanStatus, run, toDate, useLoad, loanBadge } from "../../utils";
 import { AssetThumb } from "../../components/ui";
+import { ask, toast } from "../../components/dialogs";
 import "../../styles/status-riwayat.css";
 
 const ACTIVE = ["menunggu", "disetujui"];
@@ -42,8 +44,9 @@ const Skeleton = () => (
   </div>
 );
 
-function Row({ l, i }) {
+function Row({ l, i, onCancel, busy }) {
   const [label, cls] = loanBadge(l);
+  const canCancel = loanStatus(l) === "menunggu"; // hanya yang belum diproses admin
   return (
     <div className={`sr-item ${cls || ""}`} style={{ "--i": i }}>
       <div className="sr-thumb"><AssetThumb asset={l.asset || {}} /></div>
@@ -52,13 +55,35 @@ function Row({ l, i }) {
         <small><CalIco />{fmtRange(l.tanggal_pinjam, l.tanggal_kembali_rencana)}</small>
       </div>
       <span className={`sr-pill ${cls || ""}`}>{PILL_ICO[cls] || <i className="sr-dot" />}{label}</span>
+      {canCancel && (
+        <button type="button" className="sr-cancel" disabled={busy} onClick={() => onCancel(l)}
+          aria-label={`Batalkan pengajuan ${l.asset?.name || "aset"}`}>
+          <XIco />Batalkan
+        </button>
+      )}
     </div>
   );
 }
 
 export default function StatusRiwayat() {
-  const [loans] = useLoad("/loans/mine");
+  const [loans, reload] = useLoad("/loans/mine");
   const [q, setQ] = useState("");
+  const [busyId, setBusyId] = useState(null);
+
+  const cancel = l => run(async () => {
+    const ok = await ask(
+      `Batalkan pengajuan peminjaman “${l.asset?.name || "aset"}”? Pengajuan akan dihapus dan tidak bisa dikembalikan.`,
+      { ok: "Batalkan pengajuan" },
+    );
+    if (ok === null) return;
+    setBusyId(l.id);
+    try {
+      await api(`/loans/${l.id}`, { method: "DELETE" });
+      toast("Pengajuan dibatalkan");
+    } finally {
+      setBusyId(null);
+    }
+  }, reload);
 
   const list = (loans || [])
     .filter(l => !q || String(l.asset?.name || "").toLowerCase().includes(q.trim().toLowerCase()))
@@ -79,14 +104,14 @@ export default function StatusRiwayat() {
       {/* ===== Aktif ===== */}
       <SectionHead icon={<HourglassIco />} title="Status Pengajuan Aktif" count={active.length} />
       {loans === null ? <Skeleton />
-        : active.length ? <div className="sr-list">{active.map((l, i) => <Row key={l.id} l={l} i={i} />)}</div>
+        : active.length ? <div className="sr-list">{active.map((l, i) => <Row key={l.id} l={l} i={i} onCancel={cancel} busy={busyId === l.id} />)}</div>
         : none("Tidak ada pengajuan aktif.", <InboxIco />)}
 
       {/* ===== Riwayat ===== */}
       <div className="sr-gap" />
       <SectionHead icon={<HistoryIco />} title="Riwayat Peminjaman" count={history.length} />
       {loans === null ? <Skeleton />
-        : history.length ? <div className="sr-list">{history.map((l, i) => <Row key={l.id} l={l} i={i} />)}</div>
+        : history.length ? <div className="sr-list">{history.map((l, i) => <Row key={l.id} l={l} i={i} onCancel={cancel} busy={busyId === l.id} />)}</div>
         : none("Belum ada riwayat peminjaman.", <HistoryIco />)}
     </>
   );

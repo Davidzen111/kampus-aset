@@ -485,3 +485,8 @@
 .app.user .sched-date svg{width:16px;height:16px;color:#4F8A6F}
 .app.user .sched-note{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:#F5F9F6;font-size:12.5px;line-height:1.5;color:#5E7469}
 .alert.warn{background:#FBF1D9;color:#7A5712;border:1px solid #F0DDAE}
+
+.app.user .sr-cancel{display:inline-flex;align-items:center;gap:6px;flex:none;height:36px;padding:0 14px;border:1px solid #F0C9C5;border-radius:11px;background:#fff;color:#B5453E;font:700 12.5px 'Plus Jakarta Sans',Inter,sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s}
+.app.user .sr-cancel svg{width:14px;height:14px}
+.app.user .sr-cancel:hover{background:#FCEAE8}
+.app.user .sr-cancel:disabled{opacity:.6;cursor:progress}
