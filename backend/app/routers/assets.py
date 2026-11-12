@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_user, require_admin
 from app.database import get_db
-from app.models import Asset, Loan, User
+from app.models import Asset, Loan, Notification, User
 from app.schemas.asset import AssetResponse, ScheduleItem
 from app.services.storage import delete_image, save_image
 
@@ -168,8 +168,8 @@ def delete_asset(
     asset = get_asset_or_404(db, asset_id)
 
     loans = db.query(Loan).filter(Loan.asset_id == asset_id)
-    has_loans = loans.first() is not None
-    if has_loans:
+    loan_ids = [row[0] for row in db.query(Loan.id).filter(Loan.asset_id == asset_id).all()]
+    if loan_ids:
         if not force:
             raise HTTPException(
                 status.HTTP_409_CONFLICT,
@@ -187,7 +187,11 @@ def delete_asset(
 
     photo_url = asset.photo_url
     try:
-        if has_loans:
+        if loan_ids:
+            # Urutan penting: notifikasi -> peminjaman -> aset (semua FK bersifat RESTRICT)
+            db.query(Notification).filter(
+                Notification.loan_id.in_(loan_ids)
+            ).delete(synchronize_session=False)
             loans.delete(synchronize_session=False)
         db.delete(asset)
         db.commit()
@@ -195,7 +199,7 @@ def delete_asset(
         db.rollback()
         raise HTTPException(
             status.HTTP_409_CONFLICT,
-            "Aset masih dipakai data lain (misalnya notifikasi) dan tidak dapat dihapus. "
+            "Aset masih dipakai data lain dan tidak dapat dihapus. "
             f"Detail: {str(e.orig)[:200]}",
         )
     delete_image(photo_url)
