@@ -26,3 +26,19 @@
 .ka-pill.cap{text-transform:capitalize}
 
 @media (prefers-reduced-motion:reduce){.rh-chip{transition:none}}
+
+.rh-auto{flex:none;display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 18px;border:1.5px solid #CFE0D6;border-radius:14px;background:#fff;color:#2F6350;
+  font:700 13.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:0 8px 18px -14px rgba(35,70,55,.4);transition:background .15s,border-color .15s}
+.rh-auto svg{width:17px;height:17px}
+.rh-auto:hover{background:#F3F9F5;border-color:#9FC4B1}
+.rh-auto:disabled{opacity:.6;cursor:progress}
+
+.rh-remind{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border:1px solid #CFE0D6;border-radius:11px;background:#fff;color:#2F6350;
+  font:700 12.5px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s}
+.rh-remind svg{width:14px;height:14px}
+.rh-remind:hover{background:#F3F9F5}
+.rh-remind.late{border-color:#F0C9C5;color:#B5453E}
+.rh-remind.late:hover{background:#FCEAE8}
+.rh-remind:disabled{opacity:.6;cursor:progress}
+.rh-table th.r,.rh-table td.r{text-align:right}
+.rh-table{min-width:1180px}

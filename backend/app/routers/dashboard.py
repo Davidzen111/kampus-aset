@@ -98,7 +98,6 @@ def admin_dashboard(admin: User = Depends(require_admin), db: Session = Depends(
             db, Loan.id, Loan.status == "disetujui", BELUM_KEMBALI,
             Loan.tanggal_kembali_rencana < today,
         ),
-        # Badge sidebar Admin (Gambar 16)
         "badge": {
             "verifikasi_akun": akun_pending,
             "pengajuan": pengajuan_pending,

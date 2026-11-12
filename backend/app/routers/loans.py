@@ -237,7 +237,6 @@ def cancel_loan(
         raise HTTPException(status.HTTP_409_CONFLICT, "Hanya pengajuan yang masih menunggu yang dapat dibatalkan")
 
     photo_url = loan.foto_kondisi_awal
-    # Notifikasi merujuk loan dengan ON DELETE RESTRICT, hapus dulu
     db.query(Notification).filter(Notification.loan_id == loan.id).delete()
     db.delete(loan)
     db.commit()
