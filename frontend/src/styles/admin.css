@@ -207,10 +207,6 @@ a.av{text-decoration:none;cursor:pointer}
 
 
 
-/* ==========================================================
-   TEMA ADMIN (hijau sage) — kerangka, dashboard, komponen umum
-   Semua aturan dibatasi ke ".app.admin" supaya halaman user tidak berubah.
-   ========================================================== */
 .app.admin{
   --teal:#5E9C82;--navy:#1F4237;--ink:#1F3D32;--muted:#7C9188;--line:#E6EEE9;--side-ink:#E3EFE8;
   grid-template-columns:240px 1fr;
@@ -363,9 +359,6 @@ a.av{text-decoration:none;cursor:pointer}
 @media (prefers-reduced-motion:reduce){.ad-stat,.ad-btn{transition:none}}
 
 
-/* ==========================================================
-   PENGAJUAN ADMIN + tabel umum + dialog & toast (hijau sage)
-   ========================================================== */
 
 /* ---------- Tabel umum admin: orang & baris ---------- */
 .app.admin tbody tr{transition:background .15s}

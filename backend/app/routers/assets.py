@@ -1,6 +1,7 @@
 from typing import Literal
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_user, require_admin
@@ -160,21 +161,39 @@ async def update_asset(
 @router.delete("/{asset_id}")
 def delete_asset(
     asset_id: int,
+    force: bool = False,
     admin: User = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
     asset = get_asset_or_404(db, asset_id)
 
-    # Selaras dengan ON DELETE RESTRICT di DDL
-    if db.query(Loan).filter(Loan.asset_id == asset_id).first():
-        raise HTTPException(
-            status.HTTP_409_CONFLICT,
-            "Aset memiliki riwayat peminjaman dan tidak dapat dihapus. "
-            "Ubah statusnya menjadi 'maintenance'.",
-        )
+    loans = db.query(Loan).filter(Loan.asset_id == asset_id)
+    if loans.first():
+        if not force:
+            raise HTTPException(
+                status.HTTP_409_CONFLICT,
+                "Aset memiliki riwayat peminjaman dan tidak dapat dihapus. "
+                "Ubah statusnya menjadi 'maintenance'.",
+            )
+        # Hapus paksa tidak boleh bila masih ada pengajuan/peminjaman aktif
+        if asset.status == "dipinjam" or loans.filter(
+            Loan.status.in_(["menunggu", "disetujui"])
+        ).first():
+            raise HTTPException(
+                status.HTTP_409_CONFLICT,
+                "Aset masih memiliki pengajuan atau peminjaman aktif; selesaikan dulu.",
+            )
+        loans.delete(synchronize_session=False)
 
     photo_url = asset.photo_url
-    db.delete(asset)
-    db.commit()
+    try:
+        db.delete(asset)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "Aset masih dipakai data lain (misalnya notifikasi) dan tidak dapat dihapus.",
+        )
     delete_image(photo_url)
     return {"message": "Aset dihapus"}

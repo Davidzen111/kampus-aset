@@ -27,7 +27,7 @@ export default function KelolaUser() {
     toast("Status akun diperbarui");
   }, reload);
 
-  // null selama data dimuat, supaya <Table> menampilkan "Memuat…"
+ 
   const shown = useMemo(() => {
     if (!rows) return null;
     const test = FILTERS.find(f => f[0] === filter)[4];

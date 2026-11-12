@@ -1,4 +1,3 @@
-/* Dipakai semua halaman: variabel, reset, dan komponen dasar */
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap);
 :root{--navy:#111A2B;--teal:#5FB8A5;--side-ink:#AEB6CF;--bg:#F8F8FC;--ink:#141B2D;--muted:#8A90A5;--line:#ECEDF3}
 *,*::before,*::after{box-sizing:border-box}

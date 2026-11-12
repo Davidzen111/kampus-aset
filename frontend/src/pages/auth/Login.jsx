@@ -16,7 +16,7 @@ export default function Login() {
     nav(user?.is_admin ? ROUTES.adminHome : ROUTES.userHome, { replace: true });
   };
 
-  useEffect(() => { if (getToken() && getUser()) goHome(getUser()); /* eslint-disable-next-line */ }, []);
+  useEffect(() => { if (getToken() && getUser()) goHome(getUser());  }, []);
 
   const submit = async e => {
     e.preventDefault();

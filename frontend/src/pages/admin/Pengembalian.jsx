@@ -4,7 +4,7 @@ import { fileUrl, fmtDate, run, useLoad } from "../../utils";
 import { ask, toast } from "../../components/dialogs";
 import { Table, Person, Badge, Icon, AssetThumb } from "../../components/ui";
 
-// Terlambat bila tanggal kembali aktual lebih lambat dari rencana (dibandingkan sebagai YYYY-MM-DD)
+
 const isLate = l =>
   !!l.tanggal_kembali_aktual && !!l.tanggal_kembali_rencana
   && String(l.tanggal_kembali_aktual).slice(0, 10) > String(l.tanggal_kembali_rencana).slice(0, 10);

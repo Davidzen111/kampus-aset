@@ -6,7 +6,7 @@ import { Icon } from "../components/ui";
 import { toast } from "../components/dialogs";
 import "../styles/profil.css";
 
-// Endpoint ubah profil / foto: lihat backend_users_tambahan.py. Urutan pertama = yang dipakai.
+
 const UPDATE = [["PUT", "/users/me"], ["PATCH", "/users/me"]];
 const PHOTO = [["POST", "/users/me/photo"]];
 
@@ -14,7 +14,7 @@ async function tryEndpoints(list, make) {
   let last;
   for (const [method, url] of list) {
     try { return await api(url, { method, ...make() }); }
-    catch (e) { last = e; if (e.status !== 404 && e.status !== 405) throw e; }   // 404/405 = bukan endpoint ini
+    catch (e) { last = e; if (e.status !== 404 && e.status !== 405) throw e; }   
   }
   throw last;
 }

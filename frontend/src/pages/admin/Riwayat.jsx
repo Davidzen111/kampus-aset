@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { fileUrl, fmtDate, loanStatus, useLoad } from "../../utils";
 import { Person } from "../../components/ui";
-import "../../styles/kelola-aset.css";   // gaya tabel & pencarian dipakai bersama Kelola Aset
+import "../../styles/kelola-aset.css";   
 import "../../styles/riwayat-admin.css";
 
 const LOAN_BD = { menunggu: "y", disetujui: "b", dipinjam: "b", ditolak: "r", dikembalikan: "g", selesai: "g" };
 const RET_BD = { menunggu_verifikasi: "y", diterima: "g", ditolak: "r" };
 const label = v => String(v).replace(/_/g, " ");
 
-// [nilai filter, teks chip]
+
 const FILTERS = [
   ["", "Semua"],
   ["menunggu", "Menunggu"],

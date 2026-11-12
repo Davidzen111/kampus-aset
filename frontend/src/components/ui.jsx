@@ -59,11 +59,9 @@ export function Table({ cols, rows, empty }) {
   );
 }
 
-// cls: g (hijau) | b (biru) | y (kuning) | r (merah) | kosong (abu-abu)
+
 export const Badge = ({ cls = "", children }) => <span className={`bd ${cls}`}>{children}</span>;
 
-// ===== Direktori user (khusus admin) =====
-// Daftar user dimuat sekali lalu dipakai ulang, supaya foto & detail tampil di semua tabel.
 let dirCache = null, dirAt = 0;
 function loadDirectory() {
   if (!dirCache || Date.now() - dirAt > 30000) {
@@ -77,13 +75,13 @@ function useDirectory(enabled) {
   useEffect(() => { if (enabled) loadDirectory().then(setList); }, [enabled]);
   return list;
 }
-// Cocokkan data user ringkas (dari peminjaman) dengan data lengkap di direktori.
+
 const fullUser = (list, u) =>
   list.find(x => (u.id && x.id === u.id) || (u.email && x.email === u.email))
   || list.find(x => u.nim_nip && x.nim_nip === u.nim_nip && x.name === u.name)
   || u;
 
-// Detail profil seseorang: isinya sama dengan halaman Profil (foto, identitas, kontak).
+
 export function ProfileDialog({ user: u, onClose }) {
   useEffect(() => {
     const k = e => { if (e.key === "Escape") onClose(); };

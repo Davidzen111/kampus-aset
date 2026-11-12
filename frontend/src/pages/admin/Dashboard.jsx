@@ -4,8 +4,7 @@ import { api } from "../../api";
 import { relTime } from "../../utils";
 import { Icon } from "../../components/ui";
 
-// ===== Pembaca respons dashboard =====
-// Pembaca respons dashboard yang toleran terhadap perbedaan nama field dari backend.
+
 const pick = (o, keys, d) => { for (const k of keys) if (o && o[k] !== undefined && o[k] !== null) return o[k]; return d; };
 const norm = k => String(k).toLowerCase().replace(/[^a-z0-9]/g, "");
 const isNum = v => v !== null && v !== undefined && v !== "" && typeof v !== "boolean" && !isNaN(Number(v));

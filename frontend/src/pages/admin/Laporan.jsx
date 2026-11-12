@@ -15,8 +15,7 @@ function periodLabel(items) {
   return thn(a) === thn(b) ? `${bln(a)} – ${bln(b)} ${thn(b)}` : `${bln(a)} ${thn(a)} – ${bln(b)} ${thn(b)}`;
 }
 
-// Tinggi batang tertinggi (px). Kalau diubah, sesuaikan juga tinggi .bars di admin-theme.css
-// (tinggi .bars = 18 + 8 + TINGGI_MAKS + 8 + 18).
+
 const TINGGI_MAKS = 220;
 
 function BarChart({ items }) {
@@ -110,7 +109,7 @@ export default function Laporan() {
   const [report, setReport] = useState(null);
   const [error, setError] = useState("");
 
-  // default backend: 6 bulan terakhir sampai hari ini
+
   useEffect(() => { api("/reports/loans").then(setReport).catch(e => setError(e.message)); }, []);
 
   if (error) return <p className="empty">{error}</p>;

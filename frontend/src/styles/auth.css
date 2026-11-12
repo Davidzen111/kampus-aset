@@ -1,6 +1,5 @@
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap);
 
-/* Halaman Daftar/Masuk gaya baru. Semua kelas berawalan rg- agar tidak bentrok. */
 .rg{
   --rg-ink:#1F3D32;--rg-muted:#6F8379;--rg-g1:#3F7A62;--rg-g2:#B7BB63;--rg-err:#C0392B;
   min-height:100vh;display:grid;grid-template-columns:minmax(0,53fr) minmax(0,47fr);
@@ -9,7 +8,7 @@
 .rg *{box-sizing:border-box}
 .rg button,.rg input{font-family:inherit}
 
-/* ===== Panel kiri (ilustrasi) ===== */
+
 .rg-art{
   position:relative;overflow:hidden;min-height:100vh;isolation:isolate;
   background:linear-gradient(160deg,#2A5645 0%,#386C57 42%,#5E9A82 76%,#8EB9A2 100%);

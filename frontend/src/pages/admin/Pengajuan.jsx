@@ -4,7 +4,7 @@ import { fileUrl, fmtDate, run, useLoad, toDate, iconFor, catOf } from "../../ut
 import { ask, toast } from "../../components/dialogs";
 import { Table, Person, Icon } from "../../components/ui";
 
-// lama pinjam dalam hari (null bila tanggal tidak terbaca)
+
 const days = l => {
   const a = toDate(l.tanggal_pinjam), b = toDate(l.tanggal_kembali_rencana);
   return a && b ? Math.max(1, Math.round((b - a) / 86400000) + 1) : null;

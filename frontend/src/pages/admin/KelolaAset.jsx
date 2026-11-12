@@ -110,7 +110,7 @@ function AsetDetailPanel({ asset: a, onClose, onEdit }) {
 // ===== Form tambah / edit =====
 const NEW = "__new";
 
-// Pilihan kategori: daftar dengan ikon hapus di tiap kategori yang sudah ada.
+
 function CategoryPicker({ value, isNew, cats, canDelete, onChange, onDelete }) {
   const [open, setOpen] = useState(false);
   const box = useRef(null);
@@ -143,11 +143,10 @@ function CategoryPicker({ value, isNew, cats, canDelete, onChange, onDelete }) {
   );
 }
 
-// asset = null -> tambah aset baru; asset = objek -> edit
 function AsetForm({ asset: a, onClose, onSaved }) {
   const dipinjam = a?.status === "dipinjam";
-  const [cats, setCats] = useState([]);              // [{ name, used }]
-  const [canDelete, setCanDelete] = useState(false); // true bila backend punya GET /categories
+  const [cats, setCats] = useState([]);              
+  const [canDelete, setCanDelete] = useState(false); 
   const [saving, setSaving] = useState(false);
   const [f, setF] = useState({
     name: a?.name || "", cat: a?.category || "", catNew: "", location: a?.location || "",
@@ -163,7 +162,7 @@ function AsetForm({ asset: a, onClose, onSaved }) {
       .catch(() => api("/assets/categories").then(l => setCats(l.map(name => ({ name, used: 0 })))).catch(() => {}));
   }, []);
 
-  // Pratinjau foto yang baru dipilih
+
   useEffect(() => {
     if (!photo) { setPrev(null); return; }
     const u = URL.createObjectURL(photo);
@@ -171,7 +170,7 @@ function AsetForm({ asset: a, onClose, onSaved }) {
     return () => URL.revokeObjectURL(u);
   }, [photo]);
 
-  // Tanpa tabel kategori di backend, daftar bawaan tetap ditampilkan; dengan tabel, hanya isi database.
+
   const catList = (() => {
     const m = new Map();
     const base = canDelete ? cats : [...DEFAULT_CATEGORIES.map(name => ({ name, used: 0 })), ...cats];
@@ -277,14 +276,25 @@ function AsetForm({ asset: a, onClose, onSaved }) {
 // ===== Halaman =====
 export default function KelolaAset() {
   const [assets, reload] = useLoad("/assets");
-  const [detail, setDetail] = useState(null);   // aset yang detailnya dibuka
-  const [form, setForm] = useState(undefined);  // undefined = tertutup, null = tambah, objek = edit
+  const [detail, setDetail] = useState(null);   
+  const [form, setForm] = useState(undefined); 
   const [q, setQ] = useState("");
-  const [flt, setFlt] = useState("");           // "" = semua status
+  const [flt, setFlt] = useState("");          
 
   const remove = a => run(async () => {
     if ((await ask(`Hapus aset “${a.name}”?`, { ok: "Hapus" })) === null) return;
-    await api(`/assets/${a.id}`, { method: "DELETE" });
+    try {
+      await api(`/assets/${a.id}`, { method: "DELETE" });
+    } catch (e) {
+      // Bukan karena riwayat peminjaman: biarkan ditampilkan sebagai error biasa
+      if (e.status !== 409 || !/riwayat peminjaman/i.test(e.message)) throw e;
+      const sure = await ask(
+        `“${a.name}” punya riwayat peminjaman. Hapus aset beserta seluruh riwayatnya? Tindakan ini tidak bisa dibatalkan.`,
+        { ok: "Hapus semua" },
+      );
+      if (sure === null) return;
+      await api(`/assets/${a.id}?force=true`, { method: "DELETE" });
+    }
     toast("Aset dihapus");
   }, reload);
 

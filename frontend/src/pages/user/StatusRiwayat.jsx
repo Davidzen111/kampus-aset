@@ -3,7 +3,7 @@ import { fmtRange, loanStatus, toDate, useLoad, loanBadge } from "../../utils";
 import { AssetThumb } from "../../components/ui";
 import "../../styles/status-riwayat.css";
 
-const ACTIVE = ["menunggu", "disetujui"];   // sisanya masuk Riwayat
+const ACTIVE = ["menunggu", "disetujui"];
 
 /* ---------- Ikon garis ---------- */
 const Ico = ({ children }) => (

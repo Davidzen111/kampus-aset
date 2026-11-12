@@ -1,5 +1,3 @@
-/* Halaman Kelola Aset (admin). Semua kelas berawalan ka- agar tidak bentrok dengan CSS lain.
-   Warna bisa diganti lewat variabel di bawah ini. */
 .ka{
   --ka-ink:#1F3D32; --ka-muted:#6F8379; --ka-line:#E8F0EB;
   --ka-g1:#2F6350; --ka-g2:#9DB878;
