@@ -34,7 +34,7 @@
 
 | Status & Riwayat                                    | Pengembalian                                       |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![Status & Riwayat](assets/statusriwayatuser.png)   | ![Pengembalian](assets/pengembalianuser.png)       |
+| ![Status & Riwayat](assets/statusdanriwayatuser.png)   | ![Pengembalian](assets/pengembalianuser.png)       |
 
 ---
 
