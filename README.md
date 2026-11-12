@@ -6,19 +6,35 @@
 
 ## Tampilan Aplikasi
 
-> Letakkan tangkapan layar aplikasi pada folder `assets/` dengan nama file seperti pada tabel di bawah.
+### Autentikasi
 
-| Login                      | Register                         | Dashboard Admin                  |
-| -------------------------- | -------------------------------- | -------------------------------- |
-| ![Login](assets/login.jpg) | ![Register](assets/register.jpg) | ![Dashboard](assets/dashboard.jpg) |
+| Login                          | Register                             |
+| ------------------------------ | ------------------------------------ |
+| ![Login](assets/login.png)     | ![Register](assets/register.png)     |
 
-| Kelola Aset                            | Pengajuan                            | Laporan                          |
-| -------------------------------------- | ------------------------------------ | -------------------------------- |
-| ![Kelola Aset](assets/kelola_aset.jpg) | ![Pengajuan](assets/pengajuan.jpg)   | ![Laporan](assets/laporan.jpg)   |
+### Admin
 
-| Beranda User                       | Cari Aset                        | Detail Aset & Ajukan Pinjam            | Pengembalian                           |
-| ---------------------------------- | -------------------------------- | -------------------------------------- | -------------------------------------- |
-| ![Beranda](assets/beranda_user.jpg) | ![Cari Aset](assets/cari_aset.jpg) | ![Detail Aset](assets/detail_aset.jpg) | ![Pengembalian](assets/pengembalian.jpg) |
+| Dashboard                                | Verifikasi Akun                                      | Kelola User                                  |
+| ---------------------------------------- | ---------------------------------------------------- | -------------------------------------------- |
+| ![Dashboard](assets/dashboardadmin.png)  | ![Verifikasi Akun](assets/verifikasiakunadmin.png)   | ![Kelola User](assets/kelolauseradmin.png)   |
+
+| Kelola Aset                                  | Pengajuan                                  | Pengembalian                                     |
+| -------------------------------------------- | ------------------------------------------ | ------------------------------------------------ |
+| ![Kelola Aset](assets/kelolaasetadmin.png)   | ![Pengajuan](assets/pengajuanadmin.png)    | ![Pengembalian](assets/pengembalianadmin.png)    |
+
+| Riwayat                                  | Laporan                                  |
+| ---------------------------------------- | ---------------------------------------- |
+| ![Riwayat](assets/riwayatadmin.png)      | ![Laporan](assets/laporanadmin.png)      |
+
+### User (Mahasiswa / Dosen)
+
+| Beranda                                  | Cari Aset                                  |
+| ---------------------------------------- | ------------------------------------------ |
+| ![Beranda](assets/berandauser.png)       | ![Cari Aset](assets/cariasetuser.png)      |
+
+| Status & Riwayat                                    | Pengembalian                                       |
+| --------------------------------------------------- | -------------------------------------------------- |
+| ![Status & Riwayat](assets/statusriwayatuser.png)   | ![Pengembalian](assets/pengembalianuser.png)       |
 
 ---
 
