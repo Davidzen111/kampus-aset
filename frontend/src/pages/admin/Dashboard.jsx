@@ -89,7 +89,7 @@ function actText(a) {
 
 // ===== Ilustrasi banner =====
 const Chip = ({ x, y, children }) => (
-  <g transform={`translate(${x} ${y})`} filter="url(#adSh)">
+  <g transform={`translate(${x} ${y})`} filter="url(#dsbSh)">
     <rect width="46" height="46" rx="13" fill="#fff" />
     <g transform="translate(11 11)" fill="none" stroke="#3F7A62" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{children}</g>
   </g>
@@ -99,7 +99,7 @@ function AdminArt() {
   return (
     <svg viewBox="0 0 500 245" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
       <defs>
-        <filter id="adSh" x="-30%" y="-30%" width="160%" height="170%">
+        <filter id="dsbSh" x="-30%" y="-30%" width="160%" height="170%">
           <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="#10281f" floodOpacity=".25" />
         </filter>
       </defs>
@@ -143,10 +143,10 @@ function AdminArt() {
 // ===== Komponen =====
 function StatCard({ icon, tone, value, label, sub, to }) {
   return (
-    <Link className={`ad-stat ${tone}`} to={to}>
-      <span className="ad-orb"><Icon n={icon} /></span>
-      <div className="ad-sic"><Icon n={icon} /></div>
-      <div className="ad-val"><strong>{value ?? "–"}</strong><span>{label}</span></div>
+    <Link className={`dsb-stat ${tone}`} to={to}>
+      <span className="dsb-orb"><Icon n={icon} /></span>
+      <div className="dsb-sic"><Icon n={icon} /></div>
+      <div className="dsb-val"><strong>{value ?? "–"}</strong><span>{label}</span></div>
       <small>{sub || "\u00A0"}</small>
     </Link>
   );
@@ -158,23 +158,23 @@ function TopAssets({ list }) {
   const rows = (Array.isArray(list) ? list : []).slice(0, 5);
   const max = Math.max(...rows.map(count), 1);
   return (
-    <div className="ad-card">
-      <header className="ad-head">
-        <span className="ad-hic"><Icon n="chart" /></span>
+    <div className="dsb-card">
+      <header className="dsb-head">
+        <span className="dsb-hic"><Icon n="chart" /></span>
         <div><h3>Aset paling sering dipinjam</h3><p>30 hari terakhir</p></div>
       </header>
       {!rows.length ? (
-        <div className="ad-empty"><span><Icon n="chart" /></span><b>Belum ada data</b><p>Belum ada data peminjaman 30 hari terakhir.</p></div>
+        <div className="dsb-empty"><span><Icon n="chart" /></span><b>Belum ada data</b><p>Belum ada data peminjaman 30 hari terakhir.</p></div>
       ) : rows.map((r, i) => {
         const name = pick(r, ["name", "asset_name", "nama", "nama_aset", "title"], "Aset");
         const pct = pick(r, ["percent", "persen", "percentage"], null);
         const v = Math.min(100, pct !== null ? Math.round(Number(pct)) : Math.round(count(r) / max * 100));
         return (
-          <div className="ad-bar" key={i}>
-            <span className={"ad-rank" + (i === 0 ? " top" : "")}>{i + 1}</span>
-            <div className="ad-barbody">
-              <div className="ad-barrow"><span>{name}</span><em>{v}%</em></div>
-              <div className="ad-track"><div className="ad-fill" style={{ width: v + "%" }} /></div>
+          <div className="dsb-bar" key={i}>
+            <span className={"dsb-rank" + (i === 0 ? " top" : "")}>{i + 1}</span>
+            <div className="dsb-barbody">
+              <div className="dsb-barrow"><span>{name}</span><em>{v}%</em></div>
+              <div className="dsb-track"><div className="dsb-fill" style={{ width: v + "%" }} /></div>
             </div>
           </div>
         );
@@ -186,20 +186,20 @@ function TopAssets({ list }) {
 function RecentActivity({ list }) {
   const rows = (Array.isArray(list) ? list : []).slice(0, 5);
   return (
-    <div className="ad-card">
-      <header className="ad-head">
-        <span className="ad-hic amber"><Icon n="clock" /></span>
+    <div className="dsb-card">
+      <header className="dsb-head">
+        <span className="dsb-hic amber"><Icon n="clock" /></span>
         <div><h3>Aktivitas terbaru</h3><p>Ringkasan kejadian sistem</p></div>
         <span className="grow" />
-        <Link className="ad-more" to="/admin/riwayat">Lihat semua →</Link>
+        <Link className="dsb-more" to="/admin/riwayat">Lihat semua →</Link>
       </header>
       {!rows.length ? (
-        <div className="ad-empty"><span><Icon n="inbox" /></span><b>Belum ada aktivitas</b><p>Kejadian terbaru di sistem akan muncul di sini.</p></div>
+        <div className="dsb-empty"><span><Icon n="inbox" /></span><b>Belum ada aktivitas</b><p>Kejadian terbaru di sistem akan muncul di sini.</p></div>
       ) : rows.map((a, i) => {
         const st = ACT_STYLE[actType(a)];
         return (
-          <div className="ad-act" key={i}>
-            <span className={`ad-ico ${st.cls}`}><Icon n={st.icon} /></span>
+          <div className="dsb-act" key={i}>
+            <span className={`dsb-ico ${st.cls}`}><Icon n={st.icon} /></span>
             <p>{actText(a)}</p>
             <time>{relTime(pick(a, ["created_at", "time", "timestamp", "date", "waktu", "updated_at"], null))}</time>
           </div>
@@ -251,19 +251,19 @@ export default function Dashboard() {
   return (
     <>
       {/* ===== Banner ===== */}
-      <section className="ad-hero">
-        <div className="ad-hero-text">
-          <span className="ad-chip"><i />Administrator</span>
-          <h2>Selamat datang, <span className="ad-name">{me?.name || "Admin"}</span></h2>
+      <section className="dsb-hero">
+        <div className="dsb-hero-text">
+          <span className="dsb-chip"><i />Administrator</span>
+          <h2>Selamat datang, <span className="dsb-name">{me?.name || "Admin"}</span></h2>
           <p>Kondisi aset kampus saat ini</p>
-          <div className="ad-cta">
-            <Link className="ad-btn light" to="/admin/pengajuan">
-              <Icon n="inbox" />Tinjau Pengajuan{val.sPending > 0 && <b className="ad-pc">{val.sPending}</b>}
+          <div className="dsb-cta">
+            <Link className="dsb-btn light" to="/admin/pengajuan">
+              <Icon n="inbox" />Tinjau Pengajuan{val.sPending > 0 && <b className="dsb-pc">{val.sPending}</b>}
             </Link>
-            <Link className="ad-btn ghost" to="/admin/aset"><Icon n="cube" />Kelola Aset</Link>
+            <Link className="dsb-btn ghost" to="/admin/aset"><Icon n="cube" />Kelola Aset</Link>
           </div>
         </div>
-        <div className="ad-hero-art"><AdminArt /></div>
+        <div className="dsb-hero-art"><AdminArt /></div>
       </section>
 
       {missing && (
@@ -274,11 +274,11 @@ export default function Dashboard() {
       )}
 
       {/* ===== Statistik ===== */}
-      <section className="ad-stats" aria-label="Ringkasan">
+      <section className="dsb-stats" aria-label="Ringkasan">
         {CARDS.map(c => <StatCard key={c.id} icon={c.icon} tone={c.tone} label={c.label} value={val[c.id]} sub={c.sub || sub[c.id]} to={c.to} />)}
       </section>
 
-      <section className="ad-cols">
+      <section className="dsb-cols">
         <TopAssets list={findList(data, TOP_KEYS)} />
         <RecentActivity list={findList(data, ACT_KEYS)} />
       </section>
